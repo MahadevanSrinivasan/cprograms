@@ -7,8 +7,8 @@
 typedef struct
 {
   char *p;
+  int x;
   char c;
-  long x;
 }element;
 
 
@@ -16,7 +16,7 @@ typedef struct __attribute__((__packed__))
 {
   char *p;
   char c;
-  long x;
+  int x;
 }elementP;
 
 int main(int argc, char* argv[])
