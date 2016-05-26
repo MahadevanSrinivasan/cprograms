@@ -5,35 +5,26 @@
 #include <stdio.h>
 #include <math.h>
 
-int main(void)
+int linearfit(int x[], int y[], int size)
 {
-	int miles[] = {9300, 10565, 15000, 15000, 17764,
-		       57000, 65940, 73676, 77006, 93739,
-		       146088, 153260};
-	int price[] = {7100, 15500, 4400, 4400, 5900, 4600,
-		8800, 2000, 2750, 2550, 960, 1025};
-	int size = 12;
 	/* Sticking to integer arithmetic */
 	int xbar = 0, ybar = 0;
 	long long stddevx = 0, stddevy = 0; 
-	float r = 0;
+	double r = 0;
 	int i = 0;
-
-	printf("int = %d, long = %d, long long = %d, long long int = %d\n",
-		sizeof(int), sizeof(long), sizeof(long long), sizeof(long long int));
 
 	for(i = 0; i < size; i++)
 	{
-		xbar += miles[i];
-		ybar += price[i];
+		xbar += x[i];
+		ybar += y[i];
 	}
 	xbar = xbar / size;
 	ybar = ybar / size;
 	printf("Mean(X) = %d, Mean(Y) = %d\n", xbar, ybar);
 	for(i = 0; i < size; i++)
 	{
-		stddevx += (long long) (miles[i] - xbar) * (miles[i] - xbar);
-		stddevy += (long long) (price[i] - ybar) * (price[i] - ybar);
+		stddevx += (long long) (x[i] - xbar) * (x[i] - xbar);
+		stddevy += (long long) (y[i] - ybar) * (y[i] - ybar);
 	}
 	long long temp = sqrt(stddevx) * sqrt(stddevy);
 	stddevx = sqrt(stddevx/(size-1));
@@ -42,7 +33,7 @@ int main(void)
 
 	for(i = 0; i < size; i++)
 	{
-		r += (float) (miles[i] - xbar) * (price[i] - ybar);
+		r += (double) (x[i] - xbar) * (y[i] - ybar);
 	}
 	r = r / temp;
 
@@ -51,6 +42,36 @@ int main(void)
 	printf("m = %.2f\n", m); 
 	printf("c = %.2f\n", ybar - m * xbar);
 
+	/* Another way of computing it */
+	long long num = 0, den = 0;
+	for(i = 0; i < size; i++)
+	{
+		printf("Num = %lld, Den = %lld\n", num, den);
+		printf("x[i] = %d, y[i] = %d\n", x[i], y[i]);
+		num += (long long) (x[i] - xbar) * (y[i] - ybar);
+		den += (long long) (x[i] - xbar) * (x[i] - xbar);
+	}
+	printf("Num = %lld, Den = %lld\n", num, den);
+	m = (float) num / den;
+	printf("m = %.2f\n", m);
+	printf("c = %.2f\n", ybar - m * xbar);
 	return 0;
 }	
+
+int main()
+{
+	int x[] = {9300, 10565, 15000, 15000, 17764,
+		       57000, 65940, 73676, 77006, 93739,
+		       146088, 153260};
+	int y[] = {7100, 15500, 4400, 4400, 5900, 4600,
+		8800, 2000, 2750, 2550, 960, 1025};
+	int size = 12;
+
+	//linearfit(x, y, size);
+	int x1[] = {-5, -4, -3, -2, -1};
+	int y1[] = {30822, 30924, 31027, 31129, 31232};
+	linearfit(x1, y1, 5);
+
+	return 0;
+}
 
